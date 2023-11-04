@@ -1,6 +1,6 @@
 import { Component } from '../component';
 import { ProductList } from '../productList/productList';
-import { formatPrice } from '../../utils/helpers';
+import { formatPrice, sendEvent } from '../../utils/helpers';
 import { ProductData } from 'types';
 import html from './productDetail.tpl.html';
 import { cartService } from '../../services/cart.service';
@@ -81,6 +81,9 @@ class ProductDetail extends Component {
   private _setInCart() {
     this.view.btnBuy.innerText = '✓ В корзине';
     this.view.btnBuy.disabled = true;
+    if (this.product) {
+      sendEvent('addToCart', {...this.product});
+    }
   }
 
   private _setIsSelected(add: boolean) {
