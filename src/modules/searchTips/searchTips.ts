@@ -27,13 +27,21 @@ export class SearchTips {
     if (this.view.querySelectorAll) {
         const tipElements = this.view.querySelectorAll('.tips__tip__text')
         if (this.tips.length >= tipElements.length) {
-            this.view.querySelectorAll('.tips__tip').forEach(el => el.classList.remove('loading'))
+            const tipsContainers = this.view.querySelectorAll('.tips__tip');
+
+            tipsContainers.forEach((el, index) => {
+              const link = this.tips[index].link ? this.tips[index].link : '#';
+              el.setAttribute('href', link);
+              el.classList.remove('loading')
+            })
+            
             tipElements.forEach((el, index) => {
                 el.innerHTML = this.tips[index].text;
                 el.addEventListener('click', () => {
                   let newUrl = new URL(window.location.href);
                   newUrl.pathname = this.tips[index].link ? this.tips[index].link : '/';
-                  window.location.replace(newUrl);
+                  
+                  
                 })
             })
         }
