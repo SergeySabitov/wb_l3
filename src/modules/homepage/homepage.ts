@@ -4,6 +4,7 @@ import html from './homepage.tpl.html';
 
 import { ProductList } from '../productList/productList';
 import { SearchTips } from '../searchTips/searchTips';
+import { SearchTip } from 'types';
 
 class Homepage extends Component {
   popularProducts: ProductList;
@@ -27,8 +28,9 @@ class Homepage extends Component {
       });
 
     // логика должна будет перейти в компонент SearchBar
-    const tips = ['чехол iphone 13 pro', 'коляска agex', 'яндекс станция 2'] // fetch
-
+    
+    const tips: SearchTip[] = [{text: 'чехол iphone 13 pro', link: ''}, {text: 'коляска agex', link: ''}, {text: 'ноутбук asus', link: ''}] // fetch
+    
     setTimeout(() => this.searchTips.update(tips), 2000);
 
     const isSuccessOrder = new URLSearchParams(window.location.search).get('isSuccessOrder');
