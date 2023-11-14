@@ -48,18 +48,6 @@ export const sendEvent = (eventType: string, payload: any): Promise<boolean> => 
     .catch(() => false);
 };
 
-export const isItInViewport = (element: Element): boolean => {
-  const rect = element.getBoundingClientRect();
-  const windowHeight =
-    window.innerHeight || document.documentElement.clientHeight;
-  const windowWidth = window.innerWidth || document.documentElement.clientWidth;
-
-  const verticalInView = rect.top <= windowHeight && rect.bottom >= 0;
-  const horizontalInView = rect.left <= windowWidth && rect.right >= 0;
-
-  return verticalInView && horizontalInView;
-};
-
 export const viewCardEvent = (product: ProductData) => {
   const { log, ...payload } = product;
   const eventType = log ? 'viewCardPromo' : 'viewCard';
@@ -78,11 +66,30 @@ export const viewCardEvent = (product: ProductData) => {
   });
 };
 
-export function debounce<T extends (...args: any[]) => void>(func: T, ms: number): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-
-  return function(this: any, ...args: Parameters<T>): void {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), ms);
-  };
+export function observeProducts(products: ProductData[]) {
+  const elements = document.querySelectorAll('a.product')
+      
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+     if (entry.isIntersecting) {
+          // Элемент попал в поле зрения
+        console.log('Элемент виден');
+        const product = products.find(product => () => {
+          const href = entry.target.getAttribute('href');
+          if (href) {
+              const elId = new URLSearchParams(href).get('id');
+              if (!elId) return false;
+              return product.id === +elId;
+          }          
+          return false;   
+        });
+                      
+        if (product) viewCardEvent(product)
+          // Добавьте здесь свой код для обработки попадания элемента в поле зрения
+        } 
+      })
+    })
+    elements.forEach((el) => {
+      observer.observe(el);
+    })
 }

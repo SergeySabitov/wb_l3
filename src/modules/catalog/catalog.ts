@@ -2,6 +2,8 @@ import { Component } from '../component';
 import html from './catalog.tpl.html';
 
 import { ProductList } from '../productList/productList';
+import { ProductData } from 'types';
+import { observeProducts } from '../../utils/helpers';
 
 class Catalog extends Component {
   productList: ProductList;
@@ -15,8 +17,9 @@ class Catalog extends Component {
 
   async render() {
     const productsResp = await fetch('/api/getProducts');
-    const products = await productsResp.json();
+    const products: ProductData[] = await productsResp.json();
     this.productList.update(products);
+    observeProducts(products)
   }
 }
 

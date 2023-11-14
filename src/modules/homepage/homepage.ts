@@ -1,4 +1,4 @@
-import { addElement } from '../../utils/helpers';
+import { addElement, observeProducts } from '../../utils/helpers';
 import { Component } from '../component';
 import html from './homepage.tpl.html';
 
@@ -19,6 +19,8 @@ class Homepage extends Component {
       .then((res) => res.json())
       .then((products) => {
         this.popularProducts.update(products);
+
+        observeProducts(products);
       });
 
     const isSuccessOrder = new URLSearchParams(window.location.search).get('isSuccessOrder');
